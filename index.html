@@ -1,0 +1,1419 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplikasi Peminjaman Buku</title>
+
+<style>
+
+body{
+  font-family: Arial;
+  background-image:url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f');
+  background-size:cover;
+  background-position:center;
+  margin:0;
+  color:white;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:10px;
+  padding-bottom:100px;
+}
+
+.card{
+  background:rgba(0,0,0,0.7);
+  padding:20px;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+h2{
+  text-align:center;
+  color:pink;
+}
+
+h3{
+  color:pink;
+  margin-top:25px;
+}
+
+label{
+  display:block;
+  margin-top:10px;
+  color:pink;
+}
+
+input, textarea, select{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:5px;
+  border:none;
+  box-sizing:border-box;
+}
+
+.btn{
+  background:black;
+  color:pink;
+  border:2px solid pink;
+  padding:10px;
+  border-radius:5px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.btn:hover{
+  background:pink;
+  color:black;
+}
+
+.books{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+}
+
+.book{
+  text-align:center;
+  cursor:pointer;
+}
+
+.book img{
+  width:120px;
+  height:170px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid pink;
+}
+
+.book p{
+  margin-top:5px;
+  font-size:14px;
+}
+
+.hidden{
+  display:none;
+}
+
+.footer-nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:black;
+  text-align:center;
+  padding:5px 0;
+}
+
+/* CHAT */
+
+#chatBox{
+  height:250px;
+  overflow-y:auto;
+  background:#e5ddd5;
+  border-radius:10px;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+}
+
+.chat{
+  max-width:70%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:10px;
+}
+
+.user{
+  background:#25d366;
+  color:black;
+  align-self:flex-end;
+}
+
+.bot{
+  background:white;
+  color:black;
+  align-self:flex-start;
+}
+
+#loginPage{
+  width:90%;
+  max-width:350px;
+  margin:30px auto;
+}
+
+#loginPage .btn{
+  width:100%;
+}
+
+</style>
+</head>
+
+<body>
+
+  <!-- LOGIN -->
+<div id="loginPage" class="card">
+
+<h2 style="text-align:center;">
+📚 Selamat Datang
+</h2>
+
+<br>
+
+<div style="text-align:center;">
+<img src="https://iili.io/CfHAQpt.png" alt="Logo SMPN 2 Kelapa Dua" width="120">
+</div>
+
+<br>
+
+<div style="text-align:center;">
+Perpustakaan SMPN 2 Kelapa Dua
+</div>
+
+<label>Username</label>
+<input type="text" id="loginUser" placeholder="Masukkan Username">
+
+<label>Password</label>
+<input type="password" id="loginPass" placeholder="Masukkan Password">
+
+<button class="btn" onclick="login()">Login</button>
+
+</div>
+
+<div class="container hidden" id="mainApp">
+
+
+<!-- FORM -->
+<div id="formPage" class="card">
+
+<h2>Form Peminjaman</h2>
+
+<label>Nama</label>
+<input id="nama" placeholder="Masukkan Nama">
+
+<label>Usia</label>
+<input id="usia" placeholder="Masukkan Usia">
+
+<label>Alamat</label>
+<input id="alamat" placeholder="Masukkan Alamat">
+
+<label>Jenis Kelamin</label>
+<select id="jenis_kelamin">
+<option value="">-- Pilih Jenis Kelamin --</option>
+<option value="Laki-laki">Laki-laki</option>
+<option value="Perempuan">Perempuan</option>
+</select>
+
+<label>Tanggal Pinjam</label>
+<input type="date" id="tglPinjam">
+
+<label>Tanggal Kembali</label>
+<input type="date" id="tglKembali" readonly>
+
+<label>Keperluan</label>
+<textarea id="keperluan" placeholder="Keperluan"></textarea>
+
+<button class="btn" onclick="lanjut()">Simpan</button>
+
+</div>
+
+<!-- PILIH BUKU -->
+<div id="bukuPage" class="card hidden">
+
+<h2>Pilih Buku</h2>
+
+<input
+  type="text"
+  id="searchBook"
+  placeholder="🔍 Cari judul buku..."
+  onkeyup="cariBuku()"
+  style="margin-bottom:20px;"
+>
+
+
+<!-- BAHASA INGGRIS -->
+<h3>📘 Bahasa Inggris</h3>
+
+<div class="books">
+
+<div class="book" data-title="English Is Fun">
+<img src="https://iili.io/C3Kohj1.jpg">
+<p>English Is Fun</p>
+</div>
+
+<div class="book" data-title="Always English">
+<img src="https://iili.io/C3KxB9V.jpg">
+<p>Always English</p>
+</div>
+
+<div class="book" data-title="I Love English">
+<img src="https://iili.io/C3KT5Sj.jpg">
+<p>I Love English</p>
+</div>
+
+<div class="book" data-title="Speak English">
+<img src="https://iili.io/C3KuvmQ.jpg">
+<p>Speak English</p>
+</div>
+
+<div class="book" data-title="English Is Cool">
+<img src="https://iili.io/C3KAtcu.jpg">
+<p>English Is Cool</p>
+</div>
+
+<div class="book" data-title="Bahasa Inggris">
+<img src="https://iili.io/C3KCglR.jpg">
+<p>Bahasa</p>
+</div>
+
+</div>
+
+<!-- NOVEL -->
+<h3>📖 Novel</h3>
+
+<div class="books">
+
+<div class="book" data-title="Takdir Yang Terkoyak">
+<img src="https://iili.io/C3K7Vyb.jpg">
+<p>Takdir Yang Terkoyak</p>
+</div>
+
+<div class="book" data-title="Delisa">
+<img src="https://iili.io/C3Ka07e.jpg">
+<p>Delisa</p>
+</div>
+
+<div class="book" data-title="Kisah Mukjizat Nabi">
+<img src="https://iili.io/C3Kc3ve.jpg">
+<p>Kisah Mukjizat Nabi</p>
+</div>
+
+<div class="book" data-title="Balon Merah">
+<img src="https://iili.io/C3KcyNa.jpg">
+<p>Balon Merah</p>
+</div>
+
+<div class="book" data-title="Tahajud Cinta">
+<img src="https://iili.io/C3K0KLx.jpg">
+<p>Tahajud Cinta</p>
+</div>
+
+<div class="book" data-title="Rasa Hati">
+<img src="https://iili.io/C3K0ZyF.jpg">
+<p>Rasa Hati</p>
+</div>
+
+<div class="book" data-title="Anak Jalanan">
+<img src="https://iili.io/C3KEBHP.jpg">
+<p>Anak Jalanan</p>
+</div>
+
+<div class="book" data-title="Rumah Tanpa Jendela">
+<img src="https://iili.io/C3KGO2p.jpg">
+<p>Rumah Tanpa Jendela</p>
+</div>
+
+<div class="book" data-title="Rindu Ibu">
+<img src="https://iili.io/C3KMOMb.jpg">
+<p>Rindu Ibu</p>
+</div>
+
+<div class="book" data-title="Semeliar Cinta Untuk Bunda">
+<img src="https://iili.io/C3KVa5B.jpg">
+<p>Semeliar Cinta Untuk Bunda</p>
+</div>
+
+<div class="book" data-title="Kantorku Surgaku">
+<img src="https://iili.io/C3KW7Bs.jpg">
+<p>Kantorku Surgaku</p>
+</div>
+
+<div class="book" data-title="Keluarga Cemara">
+<img src="https://iili.io/C3KYnNj.jpg">
+<p>Keluarg Cemara</p>
+</div>
+
+</div>
+
+<!-- IPA -->
+<h3>🔬 IPA</h3>
+
+<div class="books">
+
+<div class="book" data-title="Mengenal Rangka Tubuh">
+<img src="https://iili.io/C3KhW0b.jpg">
+<p>Mengenal Rangka Tubuh</p>
+</div>
+
+<div class="book" data-title="Mengenal Tubuh Kita">
+<img src="https://iili.io/C3KwvKg.jpg">
+<p>Mengenal Tubuh Kita</p>
+</div>
+
+<div class="book" data-title="Mengenal Mamalia">
+<img src="https://iili.io/C3KNQIV.jpg">
+<p>Mengenal Mamalia</p>
+</div>
+
+<div class="book" data-title="Mengenal Lingkungan Sekitar Kita">
+<img src="https://iili.io/C3Ke2cu.jpg">
+<p>Mengenal Lingkungan Sekitar Kita</p>
+</div>
+
+<div class="book" data-title="Mititgasi Bencana">
+<img src="https://iili.io/C3Kkcej.jpg">
+<p>Mitigasi Bencana</p>
+</div>
+
+<div class="book" data-title="Olimpiade Fisika">
+<img src="https://iili.io/C3K8jDv.jpg">
+<p>Olimpiade Fisika</p>
+</div>
+
+<div class="book" data-title="Menyelidiki Matahari">
+<img src="https://iili.io/C3KSIXR.jpg">
+<p>Menyelidiki Matahari</p>
+</div>
+
+<div class="book" data-title="Menyelidiki Air Dan Manfaatnya">
+<img src="https://iili.io/C3KUo37.jpg">
+<p>Menyelidiki Air Dan Manfaatnya</p>
+</div>
+
+<div class="book" data-title="Menyelidiki Udara">
+<img src="https://iili.io/C3KUsFS.jpg">
+<p>Menyelidiki Udara</p>
+</div>
+
+<div class="book" data-title="Rahasia Sains">
+<img src="https://iili.io/C3KgEf2.jpg">
+<p>Rahasia Sains</p>
+</div>
+
+<div class="book" data-title="Mengenal Moluska">
+<img src="https://iili.io/C3K4IyX.jpg">
+<p>Mengenal Moluska</p>
+</div>
+
+<div class="book" data-title="Mengenal Teknologi Robot">
+<img src="https://iili.io/C3Kj4n9.jpg">
+<p>Mengenal Teknologi Robot</p>
+</div>
+
+</div>
+
+<!-- IPS -->
+<h3>🌍 IPS</h3>
+
+<div class="books">
+
+<div class="book" data-title="Pahlawan Nasional">
+<img src="https://iili.io/C3faFn4.jpg">
+<p>Pahlawan Nasional</p>
+</div>
+
+<div class="book" data-title="Mitigasi Bencana Alam">
+<img src="https://iili.io/C3fcPLv.jpg">
+<p>Mitigasi Bencana Alam</p>
+</div>
+
+<div class="book" data-title="Merdeka">
+<img src="https://iili.io/C3flW3N.jpg">
+<p>Merdeka</p>
+</div>
+
+<div class="book" data-title="Gempa Bumi">
+<img src="https://iili.io/C3f0Plp.jpg">
+<p>Gempa Bumi</p>
+</div>
+
+<div class="book" data-title="Kekayaan Sumber Daya Indonesia">
+<img src="https://iili.io/C3f1bkP.jpg">
+<p>Kekayaan Sumber Daya Indonesia</p>
+</div>
+
+<div class="book" data-title="Kenakalan Remaja Dan Penanggulangannya">
+<img src="https://iili.io/C3fEeZg.jpg">
+<p>Kenakalan Remaja Dan Penanggulangannya</p>
+</div>
+
+<div class="book" data-title="Indonesia Di Pertemuan 3 Lempeng Bumi">
+<img src="https://iili.io/C3fGmWg.jpg">
+<p>Indonesia Di Pertemuan 3 Lempeng Bumi</p>
+</div>
+
+<div class="book" data-title="Kerajinan Nusantara">
+<img src="https://iili.io/C3fMkrv.jpg">
+<p>Kerajinan Nusantara</p>
+</div>
+
+<div class="book" data-title="Bumi Murka">
+<img src="https://iili.io/C3fWKVn.jpg">
+<p>Bumi Murka</p>
+</div>
+
+<div class="book" data-title="Dinamika Kebudayaan">
+<img src="https://iili.io/C3famWx.jpg">
+<p>Dinamika Kebudayaan</p>
+</div>
+
+</div>
+
+<!-- BAHASA INDONESIA -->
+<h3>📕 Bahasa Indonesia</h3>
+
+<div class="books">
+
+<div class="book" data-title="Ada Duka Di Wibeng">
+<img src="https://iili.io/C3fWP0G.jpg">
+<p>Ada Duka Di Wibeng</p>
+</div>
+
+<div class="book" data-title="Ayo Terus Sekolah">
+<img src="https://iili.io/C3fjBKg.jpg">
+<p>Ayo Terus Sekolah</p>
+</div>
+
+<div class="book" data-title="Pedoman Kata Baku & Tidak Baku">
+<img src="https://iili.io/C3fwlB1.jpg">
+<p>Pedoman Kata Baku & Tidak Baku</p>
+</div>
+
+<div class="book" data-title="Bersahabat Dengan Kamus">
+<img src="https://iili.io/C3fNpln.jpg">
+<p>Bersahabat Dengan Kamus</p>
+</div>
+
+<div class="book" data-title="Belajar Ejaan">
+<img src="https://iili.io/C3fehTx.jpg">
+<p>Belajar Ejaan</p>
+</div>
+
+<div class="book" data-title="Cinta Itu Bukan Virus">
+<img src="https://iili.io/C3fkyUF.jpg">
+<p>Cinta Itu Bukan Virus</p>
+</div>
+
+<div class="book" data-title="Pantang Menyerah">
+<img src="https://iili.io/C3f8lBp.jpg">
+<p>Pantang Menyerah</p>
+</div>
+
+<div class="book" data-title="Indonesia Jaya">
+<img src="https://iili.io/C3fSmf2.jpg">
+<p>Indonesia Jaya</p>
+</div>
+
+<div class="book" data-title="Penulis Cilik">
+<img src="https://iili.io/C3fgz42.jpg">
+<p>Penulis Cilik</p>
+</div>
+
+<div class="book" data-title="Ayo Mengenal Pragraf">
+<img src="https://iili.io/C3fXsCF.jpg">
+<p>Ayo Mengenal Pragraf</p>
+</div>
+
+</div>
+
+<!-- KEPULAUAN -->
+<h3>🏝️ Kepulauan</h3>
+
+<div class="books">
+
+<div class="book" data-title="Papua Barat">
+<img src="https://iili.io/C3f4KWG.jpg">
+<p>Papua Barat</p>
+</div>
+
+<div class="book" data-title="Kepulauan Riau">
+<img src="https://iili.io/C3f6FkP.jpg">
+<p>Kepulauan Riau</p>
+</div>
+
+<div class="book" data-title="Nusa Tenggara Timur">
+<img src="https://iili.io/C3fP3Pf.png">
+<p>Nusa Tenggara Timur</p>
+</div>
+
+<div class="book" data-title="Sulawesi Selatan">
+<img src="https://iili.io/C3fifsa.jpg">
+<p>Sulawesi Selatan</p>
+</div>
+
+<div class="book" data-title="Papua">
+<img src="https://iili.io/C3fLgfa.png">
+<p>Papua</p>
+</div>
+
+<div class="book" data-title="Sulawesi Barat">
+<img src="https://iili.io/C3fZHEg.jpg">
+<p>Sulawesi Barat</p>
+</div>
+
+<div class="book" data-title="Sulawesi Tengah">
+<img src="https://iili.io/C3ft0DN.jpg">
+<p>Sulawesi Tengah</p>
+</div>
+
+<div class="book" data-title="Sulawesi Tenggara">
+<img src="https://iili.io/C3fD17j.jpg">
+<p>Sulawesi Tenggara</p>
+</div>
+
+<div class="book" data-title="Sulawesi Utara">
+<img src="https://iili.io/C3fbYjp.jpg">
+<p>Sulawesi Utara</p>
+</div>
+
+<div class="book" data-title="Sumatra Barat">
+<img src="https://iili.io/C3fmwJa.jpg">
+<p>Sumatra Barat</p>
+</div>
+
+<div class="book" data-title="Sumatra Selatan">
+<img src="https://iili.io/C3fy9CN.jpg">
+<p>Sumatra Selatan</p>
+</div>
+
+<div class="book" data-title="Sumatra Utara">
+<img src="https://iili.io/C3q9doQ.jpg">
+<p>Sumatra Utara</p>
+</div>
+
+<div class="book" data-title="Nusa Tenggara Barat">
+<img src="https://iili.io/C3f4XLJ.png">
+<p>Nusa Tenggara Barat</p>
+</div>
+
+</div>
+
+<!-- MATEMATIKA -->
+<h3>➗ Matematika</h3>
+
+<div class="books">
+
+<div class="book" data-title="Segitiga">
+<img src="https://iili.io/C3qH8ps.jpg">
+<p>Segitiga</p>
+</div>
+
+<div class="book" data-title="Berat, Waktu Dan Pengukuran">
+<img src="https://iili.io/C3qd7UP.jpg">
+<p>Berat, Waktu Dan Pengukuran</p>
+</div>
+
+<div class="book" data-title="Siku-Siku">
+<img src="https://iili.io/C3q3f99.jpg">
+<p>Siku-Siku</p>
+</div>
+
+<div class="book" data-title="Garis Dan Kedudukannya">
+<img src="https://iili.io/C3qFtXs.jpg">
+<p>Garis Dan Kedudukannya</p>
+</div>
+
+<div class="book" data-title="Mengukur Bangun Datar">
+<img src="https://iili.io/C3qKtyP.jpg">
+<p>Mengukur Bangun Datar</p>
+</div>
+
+<div class="book" data-title="Trik-Trik Berhitung">
+<img src="https://iili.io/C3qfPDX.jpg">
+<p>Trik-Trik Berhitung</p>
+</div>
+
+<div class="book" data-title="Bilangan">
+<img src="https://iili.io/C3qoCEg.jpg">
+<p>Bilangan</p>
+</div>
+
+<div class="book" data-title="Alat Analisis Data">
+<img src="https://iili.io/C3qxVUJ.jpg">
+<p>Alat Analisis Data</p>
+</div>
+
+<div class="book" data-title="Struktur Aljabar">
+<img src="https://iili.io/C3qz0ml.jpg">
+<p>Struktur Aljabar</p>
+</div>
+
+<div class="book" data-title="Matematika Smp">
+<img src="https://iili.io/C3qTzPt.jpg">
+<p>Matematika Smp</p>
+</div>
+
+
+</div>
+
+<!-- PAI -->
+<h3>🕌 Pendidikan Agama Islam</h3>
+
+<div class="books">
+
+<div class="book" data-title="Bahasa Arab Untuk Dasar">
+<img src="https://iili.io/C3qumCB.jpg">
+<p>Bahasa Arab Untuk Dasar</p>
+</div>
+
+<div class="book" data-title="Kumpulan doa dalam Al-Qur'an">
+<img src="https://iili.io/C3q5mCl.jpg">
+<p>Kumpulan doa dalam Al-Qur'an</p>
+</div>
+
+<div class="book" data-title="Surat Terpilih Dan Makna Ringkas">
+<img src="https://iili.io/C3qYbgS.jpg">
+<p>Surat Terpilih Dan Makna Ringkas</p>
+</div>
+
+<div class="book" data-title="Hari-Hari Suci Umat Islam">
+<img src="https://iili.io/C3qcUAX.jpg">
+<p>Hari-Hari Suci Umat Islam</p>
+</div>
+
+<div class="book" data-title="Mukjijat Nabi Dalam Al-Qur'an">
+<img src="https://iili.io/C3q0dIn.jpg">
+<p>Mukjijat Nabi Dalam Al-Qur'an</p>
+</div>
+
+<div class="book" data-title="Mengenal Huruf Hijaiyah">
+<img src="https://iili.io/C3q1ES2.jpg">
+<p>Mengenal Huruf Hijaiyah</p>
+</div>
+
+<div class="book" data-title="Muhammad SAW idolaku">
+<img src="https://iili.io/C3qGRBs.jpg">
+<p>Muhammad SAW idolaku</p>
+</div>
+
+<div class="book" data-title="Meneladani 99 sifat allah">
+<img src="https://iili.io/C3qMSHl.jpg">
+<p>Meneladani 99 sifat allah</p>
+</div>
+
+<div class="book" data-title="Kumpulan Hadits">
+<img src="https://iili.io/C3qWuQ1.jpg">
+<p>Kumpulan Hadits</p>
+</div>
+
+<div class="book" data-title="20 Cerita Anak Muslim">
+<img src="https://iili.io/C3qXXDB.jpg">
+<p>20 Cerita Anak Muslim</p>
+</div>
+
+<div class="book" data-title="100 Hadits Qudsi">
+<img src="https://iili.io/C3qjgnI.jpg">
+<p>100 Hadits Qudsi</p>
+</div>
+
+<div class="book" data-title="Aku Cinta Damai">
+<img src="https://iili.io/C3qRYOJ.jpg">
+<p>Aku Cinta Damai</p>
+</div>
+
+</div>
+
+<!-- PENJAS -->
+<h3>⚽ Penjas</h3>
+
+<div class="books">
+
+<div class="book" data-title="Pola-Pola Dalam Senam">
+<img src="https://iili.io/C3qN8BI.jpg">
+<p>Pola-Pola Dalam Senam</p>
+</div>
+
+<div class="book" data-title="Obat Yang Ada Di Sekitar Kita">
+<img src="https://iili.io/C3q8k0B.jpg">
+<p>Obat Yang Ada Di Sekitar Kita</p>
+</div>
+
+<div class="book" data-title="Tenis Meja">
+<img src="https://iili.io/C3qgHKl.jpg">
+<p>Tenis Meja</p>
+</div>
+
+<div class="book" data-title="Stop Mirasantika">
+<img src="https://iili.io/C3q6RO7.jpg">
+<p>Stop Mirasantika</p>
+</div>
+
+<div class="book" data-title="Kacang Hijau">
+<img src="https://iili.io/C3qZQ1e.jpg">
+<p>Kacang Hijau</p>
+</div>
+
+<div class="book" data-title="Tanaman Yang Mengandung Zat Pengganggu">
+<img src="https://iili.io/C3qb5b4.jpg">
+<p>Tanaman Yang Mengandung Zat Pengganggu</p>
+</div>
+
+<div class="book" data-title="Teori Bermain Catur">
+<img src="https://iili.io/C3BJcLx.jpg">
+<p>Teori Bermain Catur</p>
+</div>
+
+<div class="book" data-title="Olahraga Alam">
+<img src="https://iili.io/C3B33dB.jpg">
+<p>Olahraga Alam</p>
+</div>
+
+<div class="book" data-title="Panduan Sepak Bola">
+<img src="https://iili.io/C3BFTCb.jpg">
+<p>Panduan Sepak Bola</p>
+</div>
+
+<div class="book" data-title="Pola Hidup Sehat">
+<img src="https://iili.io/C3qeQ07.jpg">
+<p>Pola Hidup Sehat</p>
+</div>
+
+</div>
+
+<!-- PKN -->
+<h3>🏛️ PKN</h3>
+
+<div class="books">
+
+<div class="book" data-title="Berbakti Pada Orang Tua">
+<img src="https://iili.io/C3BBIRV.jpg">
+<p>Berbakti Pada Orang Tua</p>
+</div>
+
+<div class="book" data-title="Akhlak Siswa Terhadap Guru">
+<img src="https://iili.io/C3BxIrg.jpg">
+<p>Akhlak Siswa Terhadap Guru</p>
+</div>
+
+<div class="book" data-title="Akhlak Siswa Terhadap Teman">
+<img src="https://iili.io/C3BIc0X.jpg">
+<p>Akhlak Siswa Terhadap Teman</p>
+</div>
+
+<div class="book" data-title="Bakti Seorang Anak">
+<img src="https://iili.io/C3BuoAJ.jpg">
+<p>Bakti Seorang Anak</p>
+</div>
+
+<div class="book" data-title="Budi Pekerti Bertamu">
+<img src="https://iili.io/C3BRYTG.jpg">
+<p>Budi Pekerti Bertamu</p>
+</div>
+
+<div class="book" data-title="Pendidikan Budi Pekerti">
+<img src="https://iili.io/C3B7Wzb.jpg">
+<p>Pendidikan Budi Pekerti</p>
+</div>
+
+<div class="book" data-title="Budi Pekerti Luhur">
+<img src="https://iili.io/C3BalR9.jpg">
+<p>Budi Pekerti Luhur</p>
+</div>
+
+<div class="book" data-title="Hidup Berbhineka Tunggal Ika">
+<img src="https://iili.io/C3Blv6v.jpg">
+<p>Hidup Berbhineka Tunggal Ika</p>
+</div>
+
+<div class="book" data-title="Ideologi Negara">
+<img src="https://iili.io/C3B0tzF.jpg">
+<p>Ideologi Negara</p>
+</div>
+
+<div class="book" data-title="Ideologi Pancasila">
+<img src="https://iili.io/C3BE0nn.jpg">
+<p>Ideologi Pancasila</p>
+</div>
+
+<div class="book" data-title="Sikap Dan Moral Menentukan Kesuksesan">
+<img src="https://iili.io/C3BGSWX.jpg">
+<p>Sikap Dan Moral Menentukan Kesuksesan</p>
+</div>
+
+<div class="book" data-title="Tata Tertib Di Sekolah Dan Di Rumah">
+<img src="https://iili.io/C3BV0n1.jpg">
+<p>Tata Tertib Di Sekolah Dan Di Rumah</p>
+</div>
+
+<div class="book" data-title="Hubungan Internasional">
+<img src="https://iili.io/C3BXk2s.jpg">
+<p>Hubungan Internasional</p>
+</div>
+
+<div class="book" data-title="Akhlak Siswa Terhadap Alam">
+<img src="https://iili.io/C3BCQGn.jpg">
+<p>Akhlak Siswa Terhadap Alam</p>
+</div>
+
+</div>
+
+<!-- SENI BUDAYA -->
+<h3>🎨 Seni Budaya</h3>
+
+<div class="books">
+
+<div class="book" data-title="Mengenal Teater">
+<img src="https://iili.io/C3BwTkG.jpg">
+<p>Mengenal Teater</p>
+</div>
+
+<div class="book" data-title="Mengenal Pelukis Dunia Dan Indonesia">
+<img src="https://iili.io/C3Berjj.jpg">
+<p>Mengenal Teater</p>
+</div>
+
+<div class="book" data-title="Batik Dan Tenun">
+<img src="https://iili.io/C3Bv70N.jpg">
+<p>Batik Dan Tenun</p>
+</div>
+
+<div class="book" data-title="Mengenal Musik Seni Dan Lagu">
+<img src="https://iili.io/C3Bv70N.jpg">
+<p>Mengenal Musik Seni Dan Lagu</p>
+</div>
+
+<div class="book" data-title="Mengenal Warna">
+<img src="https://iili.io/C3Bgo4R.jpg">
+<p>Mengenal Warna</p>
+</div>
+
+<div class="book" data-title="Membatik">
+<img src="https://iili.io/C3BrgUl.jpg">
+<p>Membatik</p>
+</div>
+
+<div class="book" data-title="Keragaman Tari Nusantara">
+<img src="https://iili.io/C3B4jrx.jpg">
+<p>Keragaman Tari Nusantara</p>
+</div>
+
+<div class="book" data-title="Aneka Tari Anak-Anak">
+<img src="https://iili.io/C3B6Zcx.jpg">
+<p>Aneka Tari Anak-Anak</p>
+</div>
+
+<div class="book" data-title="Batikku">
+<img src="https://iili.io/C3BsfjI.jpg">
+<p>Batikku</p>
+</div>
+
+<div class="book" data-title="Membuat Karakter">
+<img src="https://iili.io/C3BLNb2.jpg">
+<p>Membuat Karakter</p>
+</div>
+
+<div class="book" data-title="Mengenal Seni Tari">
+<img src="https://iili.io/C3BZuyv.jpg">
+<p>Mengenal Seni Tari</p>
+</div>
+
+<div class="book" data-title="Mengenal Alat Musik">
+<img src="https://iili.io/C3BNDKP.jpg">
+<p>Mengenal Pelukis Dunia Dan Indonesia</p>
+</div>
+
+</div>
+
+<!-- TIK -->
+<h3>💻 TIK</h3>
+
+<div class="books">
+
+<div class="book" data-title="Jelajahi Informasi Menggunakan Internet">
+<img src="https://iili.io/C3BDzmv.jpg">
+<p>Jelajahi Informasi Menggunakan Internet</p>
+</div>
+
+<div class="book" data-title="Solusi Cepat Bisa Microsoft Office">
+<img src="https://iili.io/C3BmRUX.jpg">
+<p>Solusi Cepat Bisa Microsoft Office</p>
+</div>
+
+<div class="book" data-title="Elektronik Di Rumah Kita">
+<img src="https://iili.io/C3ByV9e.jpg">
+<p>Elektronik Di Rumah Kita</p>
+</div>
+
+<div class="book" data-title="Dasar-Dasar Microsoft Excel">
+<img src="https://iili.io/C3C9Pee.jpg">
+<p>Dasar-Dasar Microsoft Excel</p>
+</div>
+
+<div class="book" data-title="Alat Komunikasi">
+<img src="https://iili.io/C3Bb5wx.jpg">
+<p>Alat Komunikasi</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- RIWAYAT -->
+<div id="riwayatPage" class="card hidden">
+
+<h2>Riwayat</h2>
+
+<div id="riwayatList"></div>
+
+</div>
+
+<!-- CHATBOT -->
+<div id="chatPage" class="card hidden">
+
+<h2>Chatbot</h2>
+
+<div id="chatBox"></div>
+
+<input id="chatInput" placeholder="Tanya sesuatu...">
+
+<button class="btn" onclick="kirimPesan()">Kirim</button>
+
+<button class="btn" onclick="kirimWA()">Kirim ke WA</button>
+
+</div>
+
+</div>
+
+<!-- NAV -->
+<div class="footer-nav">
+
+<button class="btn" onclick="show('formPage')">Form</button>
+
+<button class="btn" onclick="show('bukuPage')">Buku</button>
+
+<button class="btn" onclick="show('riwayatPage')">Riwayat</button>
+
+<button class="btn" onclick="show('chatPage')">Chatbot</button>
+
+<button class="btn" onclick="logout()">Logout</button>
+
+</div>
+
+<script>
+
+let dataSementara = {};
+let lastMessage = "";
+
+/* LOGIN */
+
+const akun = [
+{
+username:"admin",
+password:"admin123"
+},
+{
+username:"siswa",
+password:"12345"
+}
+];
+
+function login(){
+
+let username = document.getElementById("loginUser").value;
+let password = document.getElementById("loginPass").value;
+
+let cocok = akun.find(
+a => a.username === username &&
+a.password === password
+);
+
+if(cocok){
+
+localStorage.setItem("isLogin","true");
+localStorage.setItem("username",username);
+
+document.getElementById("loginPage").classList.add("hidden");
+document.getElementById("mainApp").classList.remove("hidden");
+
+alert("Login berhasil!");
+
+}else{
+
+alert("Username atau Password salah!");
+
+}
+
+}
+
+function logout(){
+
+localStorage.removeItem("isLogin");
+localStorage.removeItem("username");
+
+location.reload();
+
+}
+
+/* CEK LOGIN SAAT WEB DIBUKA */
+
+window.onload = function(){
+
+tampil();
+
+if(localStorage.getItem("isLogin") === "true"){
+
+document.getElementById("loginPage").classList.add("hidden");
+document.getElementById("mainApp").classList.remove("hidden");
+
+}else{
+
+document.getElementById("loginPage").classList.remove("hidden");
+document.getElementById("mainApp").classList.add("hidden");
+
+}
+
+};
+
+let books = document.querySelectorAll(".book");
+
+/* PENCARIAN BUKU */
+
+function cariBuku(){
+
+let keyword = document
+.getElementById("searchBook")
+.value
+.toLowerCase();
+
+let semuaBuku = document.querySelectorAll(".book");
+
+semuaBuku.forEach(buku=>{
+
+let judul = buku.dataset.title.toLowerCase();
+
+if(judul.includes(keyword)){
+buku.style.display = "block";
+}else{
+buku.style.display = "none";
+}
+
+});
+
+}
+
+/* NAVIGASI */
+
+function show(id){
+
+['formPage','bukuPage','riwayatPage','chatPage']
+.forEach(p => document.getElementById(p).classList.add('hidden'));
+
+document.getElementById(id).classList.remove('hidden');
+
+}
+
+/* AUTO TANGGAL */
+
+tglPinjam.addEventListener("change", function(){
+
+let pinjam = new Date(this.value);
+
+if(!isNaN(pinjam)){
+
+pinjam.setDate(pinjam.getDate() + 3);
+
+let tahun = pinjam.getFullYear();
+let bulan = String(pinjam.getMonth()+1).padStart(2,'0');
+let hari = String(pinjam.getDate()).padStart(2,'0');
+
+tglKembali.value = `${tahun}-${bulan}-${hari}`;
+
+}
+
+});
+
+/* FORM */
+
+function lanjut(){
+
+dataSementara = {
+
+nama:nama.value,
+usia:usia.value,
+alamat:alamat.value,
+jenis_kelamin:jenis_kelamin.value,
+tglPinjam:tglPinjam.value,
+tglKembali:tglKembali.value,
+keperluan:keperluan.value
+
+};
+
+if(!dataSementara.nama || !dataSementara.jenis_kelamin){
+
+alert("Isi semua data dulu!");
+return;
+
+}
+
+show('bukuPage');
+
+}
+
+/* PILIH BUKU */
+
+books.forEach(b => {
+
+b.onclick = () => {
+
+let r = JSON.parse(localStorage.getItem("data")) || [];
+
+r.push({
+
+...dataSementara,
+buku:b.dataset.title
+
+});
+
+localStorage.setItem("data", JSON.stringify(r));
+
+tampil();
+
+show('riwayatPage');
+
+}
+
+});
+
+/* RIWAYAT */
+
+function tampil(){
+
+let r = JSON.parse(localStorage.getItem("data")) || [];
+
+riwayatList.innerHTML = "";
+
+r.forEach((d,i)=>{
+
+riwayatList.innerHTML += `
+
+<div>
+
+<b>${i+1}. ${d.nama}</b><br><br>
+
+Usia : ${d.usia}<br>
+Alamat : ${d.alamat}<br>
+Jenis Kelamin : ${d.jenis_kelamin}<br>
+Buku : ${d.buku}<br>
+Tanggal Pinjam : ${d.tglPinjam}<br>
+Tanggal Kembali : ${d.tglKembali}<br>
+Keperluan : ${d.keperluan}
+
+<hr>
+
+</div>
+
+`;
+
+});
+
+}
+
+window.onload = tampil;
+
+/* CHATBOT */
+
+function kirimPesan(){
+
+let text = chatInput.value.toLowerCase().trim();
+
+if(!text) return;
+
+lastMessage = text;
+
+chatBox.innerHTML += `
+<div class="chat user">${text}</div>
+`;
+
+if(
+text.includes("halo") ||
+text.includes("hai") ||
+text.includes("hello") ||
+text.includes("selamat pagi") ||
+text.includes("selamat siang") ||
+text.includes("selamat sore")
+){
+res = "Halo 👋 Selamat datang di Perpustakaan SMPN 2 Kelapa Dua. Ada yang bisa saya bantu?";
+}
+
+else if(
+text.includes("jam buka") ||
+text.includes("buka jam berapa") ||
+text.includes("kapan buka") ||
+text.includes("perpustakaan buka") ||
+text.includes("jadwal buka")
+){
+res = "Perpustakaan buka setiap Senin - Jumat pukul 08.00 - 16.00 WIB 📚";
+}
+
+else if(
+text.includes("jam tutup") ||
+text.includes("tutup jam berapa") ||
+text.includes("kapan tutup")
+){
+res = "Perpustakaan tutup pukul 16.00 WIB.";
+}
+
+else if(
+text.includes("alamat") ||
+text.includes("lokasi") ||
+text.includes("letak perpustakaan") ||
+text.includes("dimana perpustakaan")
+){
+res = "Perpustakaan berada di lingkungan SMPN 2 Kelapa Dua 🏫";
+}
+
+else if(
+text.includes("pinjam buku") ||
+text.includes("cara pinjam") ||
+text.includes("meminjam buku") ||
+text.includes("prosedur peminjaman")
+){
+res = "Silakan isi formulir peminjaman lalu pilih buku yang ingin dipinjam 📖";
+}
+
+else if(
+text.includes("kembalikan buku") ||
+text.includes("pengembalian") ||
+text.includes("cara mengembalikan")
+){
+res = "Buku dapat dikembalikan sebelum tanggal jatuh tempo.";
+}
+
+else if(
+text.includes("lama peminjaman") ||
+text.includes("berapa hari") ||
+text.includes("berapa lama pinjam")
+){
+res = "Masa peminjaman buku adalah 7 hari 📅";
+}
+
+else if(
+text.includes("denda") ||
+text.includes("terlambat") ||
+text.includes("sanksi")
+){
+res = "Denda keterlambatan pengembalian adalah Rp1.000 per hari 💰";
+}
+
+else if(
+text.includes("wifi") ||
+text.includes("internet")
+){
+res = "WiFi tersedia di area perpustakaan 📶";
+}
+
+else if(
+text.includes("anggota") ||
+text.includes("kartu anggota")
+){
+res = "Seluruh siswa SMPN 2 Kelapa Dua dapat menjadi anggota perpustakaan.";
+}
+
+else if(
+text.includes("novel")
+){
+res = "Novel tersedia pada kategori Fiksi 📚";
+}
+
+else if(
+text.includes("matematika")
+){
+res = "Buku Matematika tersedia pada kategori Matematika.";
+}
+
+else if(
+text.includes("ipa")
+){
+res = "Buku IPA tersedia pada kategori Sains.";
+}
+
+else if(
+text.includes("ips")
+){
+res = "Buku IPS tersedia pada kategori Ilmu Sosial.";
+}
+
+else if(
+text.includes("agama")
+){
+res = "Buku Agama tersedia pada kategori Pendidikan Agama.";
+}
+
+else if(
+text.includes("komputer") ||
+text.includes("informatika")
+){
+res = "Buku Informatika tersedia pada kategori Teknologi.";
+}
+
+else if(
+text.includes("siapa kamu") ||
+text.includes("nama kamu")
+){
+res = "Saya adalah Chatbot Perpustakaan SMPN 2 Kelapa Dua 🤖";
+}
+
+else if(
+text.includes("terima kasih") ||
+text.includes("makasih")
+){
+res = "Sama-sama 😊 Senang bisa membantu.";
+}
+
+else{
+res = "Maaf, saya belum memahami pertanyaan tersebut. Silakan tanyakan tentang jam buka, peminjaman buku, pengembalian buku, denda, lokasi perpustakaan, atau koleksi buku 📚";
+}
+
+
+setTimeout(()=>{
+
+chatBox.innerHTML += `
+<div class="chat bot">${res}</div>
+`;
+
+chatBox.scrollTop = chatBox.scrollHeight;
+
+},500);
+
+chatInput.value = "";
+
+}
+
+/* WHATSAPP */
+
+function kirimWA(){
+
+if(!lastMessage){
+
+alert("Chat dulu!");
+return;
+
+}
+
+let pesan = `Nama: ${nama.value}
+Usia: ${usia.value}
+Alamat: ${alamat.value}
+Jenis Kelamin: ${jenis_kelamin.value}
+
+Pesan: ${lastMessage}`;
+
+let no = "6287730057526";
+
+let url = `https://wa.me/${no}?text=${encodeURIComponent(pesan)}`;
+
+console.log(url);
+alert(url);
+
+window.open(url,"_blank");
+
+}
+
+</script>
+
+</body>
+</html>
+```
